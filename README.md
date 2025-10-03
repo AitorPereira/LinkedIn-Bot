@@ -1,4 +1,4 @@
-# SeleniumLinkedInBot (Version V1)
+# SeleniumLinkedInBot (Version V2)
 
 
 Small project to search for job offers on LinkedIn (e.g., "Python Developer" in "Europe"), navigate through the results, extract relevant information (title, link, company, location, date, and description), and save it to a CSV file.
