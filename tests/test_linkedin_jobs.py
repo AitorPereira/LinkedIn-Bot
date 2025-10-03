@@ -9,7 +9,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-KEYWORDS = ["Python", "Data", "Machine Learning", "IA", "Analyst", "Científico", "Ingeniero"]
+KEYWORDS = ["2 years", "at least 2 years", "Machine Learning", "IA", "Analyst", "Científico", "Ingeniero"]
 
 OUTPUT_FILE = "linkedin_jobs.csv"
 
@@ -46,7 +46,7 @@ class TestLinkedInJobs:
 
         # 🔹 Aquí hacemos la búsqueda
         jobs.search_job("Python Developer")
-        jobs.replace_job_location("Python Developer","Europe")
+        jobs.replace_job_location("Python Developer","Europe", experience_level="entry", date_posted="past_week")
 
         while True:
             job_cards = jobs.get_job_cards()

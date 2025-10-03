@@ -24,7 +24,9 @@ class JobDetailsPage(BasePage):
             link = "N/A"
 
         try:
-            company = job_card.find_element(By.CSS_SELECTOR, "a.topcard__org-name-link").text
+            company = job_card.find_element(By.CSS_SELECTOR, "a.hidden-nested-link, a.base-card__subtitle-link, span.base-search-card__subtitle").text.strip()
+            # company = self.get_text_from_element(job_card, (By.CSS_SELECTOR, "a.topcard__org-name-link"))
+            # company = job_card.find_element(By.CSS_SELECTOR, "a.base-card__subtitle-link, span.base-search-card__subtitle").text
         except:
             company = "N/A"
 
@@ -45,19 +47,6 @@ class JobDetailsPage(BasePage):
             "location": location,
             "date": date
         }
-
-        # if not self.exists(self.TITLE, timeout=5):
-        #     return None
-        # if not self.exists(self.COMPANY, timeout=5):
-        #     return None
-
-        # title = self.get_text(self.TITLE)
-        # link = self.get_element(self.TITLE_LINK).get_attribute("href") #if self.exists(self.TITLE_LINK, 3) else "N/A"
-        # company = self.get_text(self.COMPANY)
-        # location = self.get_text(self.LOCATION) if self.exists(self.LOCATION, 3) else "N/A"
-        # date = self.get_text(self.DATE) if self.exists(self.DATE, 3) else "N/A"
-
-        # return {"title": title, "link": link, "company": company, "location": location, "date": date}
 
     def expand_description(self):
         if self.exists(self.SHOW_MORE, timeout=3):

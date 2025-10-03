@@ -1,20 +1,25 @@
 # src/PageObject/Pages/JobsPage.py
 from selenium.webdriver.common.by import By
 from src.PageObject.Base.BasePage import BasePage
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 
 class JobsPage(BasePage):
-    JOB_LIST = (By.CSS_SELECTOR, "div.base-card")
+    JOB_LIST = (By.CSS_SELECTOR, "div.job-search-card")
     DISMISS_MODAL = (By.CSS_SELECTOR, "button.modal__dismiss")
     SEE_MORE_BUTTON = (By.CSS_SELECTOR, "button.infinite-scroller__show-more-button")
     KEYWORDS_INPUT = (By.ID, "job-search-bar-keywords")
     LOCATION_INPUT = (By. ID, "job-search-bar-location")
+    EXPERIENCE_LEVEL_DROPDOWN = (By.XPATH, "//button[normalize-space()='Experience level' or normalize-space()='Nivel de experiencia']")
+    INTERNSHIP_EXPERIENCE = (By. ID, "f_E-0")
+    ENTRY_LEVEL_EXPERIENCE = (By. ID, "f_E-1")
+    ASSOCIATE_EXPERIENCE = (By. ID, "f_E-2")
+    MID_SENIOR_EXPERIENCE = (By. ID, "f_E-3")
+    DIRECTOR_EXPERIENCE = (By. ID, "f_E-4")
+    SUBMIT_BUTTON_EXPERIENCE = (By.XPATH, "//button[@data-tracking-control-name='public_jobs_f_E' and not(@hidden)]")
+
 
     def dismiss_modal(self):
         if self.exists(self.DISMISS_MODAL, timeout=5):
@@ -40,22 +45,50 @@ class JobsPage(BasePage):
         input_box.click()  # hacer click
         input_box.send_keys(job_title)
 
-    def replace_job_location(self, keyword, job_location):
-        # Construir la URL de búsqueda directamente
-        keyword_param = keyword.replace(" ", "+")
-        location_param = job_location.replace(" ", "+")
-        url = f"https://www.linkedin.com/jobs/search?keywords={keyword_param}&location={location_param}&geoId=&trk=public_jobs_jobs-search-bar_search-submit"
-        self.driver.get(url)
-        time.sleep(5)  # esperar a que cargue la página
+    def replace_job_location(self, keyword, job_location, experience_level="entry", date_posted="any"):
+        """
+        Construir la URL de búsqueda incluyendo:
+        - keyword
+        - job_location
+        - nivel de experiencia (f_E)
+        - fecha de publicación (f_TPR)
+        """
 
-                # wait = WebDriverWait(self.driver, 10)
-        # for i in range(3):
-        #     try:
-        #         input_box = wait.until(EC.presence_of_element_located(self.LOCATION_INPUT))
-        #         input_box.clear()
-        #         input_box.send_keys(job_location + Keys.ENTER)
-        #         wait.until(lambda d: d.find_element(*self.LOCATION_INPUT).get_attribute("value") == job_location)
-        #         break
-        #     except StaleElementReferenceException:
-        #         print("⚠️ El input se recargó, reintentando...")
-        #         time.sleep(1)
+        # Valores correctos según LinkedIn real
+        experience_map = {
+            "internship": "1",
+            "entry": "2",
+            "associate": "3",
+            "mid-senior": "4",
+            "director": "5",
+        }
+
+        date_map = {
+            "any": "",
+            "past_24_hours": "r86400",
+            "past_week": "r604800",
+            "past_month": "r2592000",
+        }
+
+        keyword_param = keyword.replace(" ", "%20")
+        location_param = job_location.replace(" ", "%20")
+        experience_param = experience_map.get(experience_level.lower(), "1")
+        date_param = date_map.get(date_posted.lower(), "")
+
+
+        url = (
+            f"https://www.linkedin.com/jobs/search?"
+            f"keywords={keyword_param}&"
+            f"location={location_param}&"
+            f"f_E={experience_param}&"
+            f"geoId=&trk=public_jobs_jobs-search-bar_search-submit"
+        )
+
+        if date_param:
+            url += f"&f_TPR={date_param}"
+
+        url += "&position=1&pageNum=0"
+
+        print(f"🔗 Navegando a URL filtrada: {url}")
+        self.driver.get(url)
+        time.sleep(5)
