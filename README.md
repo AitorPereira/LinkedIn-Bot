@@ -1,4 +1,4 @@
-# 🤖 Selenium LinkedIn Bot: Pytest + Page Object Model (Version V2.)
+# 🤖 Selenium LinkedIn Bot: Pytest + Page Object Model (Version V3.)
 
 This repository contains an automation framework built with **Selenium** and **Pytest**, designed to search job offers on **LinkedIn** (e.g., “Python Developer” in “Europe”).  
 It navigates through the results, extracts relevant information (title, company, location, date, link, and description), and saves it into a CSV file.
