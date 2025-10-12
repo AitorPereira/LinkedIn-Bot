@@ -139,6 +139,6 @@ git push origin feature/my-change
 ```
 4️⃣ Open a Pull Request with a clear description.
 
-### 📜 License
+### 📜 License 
 
 This project is licensed under the MIT License.
